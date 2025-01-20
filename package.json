@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@playwright/browser-chromium": "^1.49.1",
+    "@playwright/browser-firefox": "^1.49.1",
+    "@playwright/browser-webkit": "^1.49.1",
+    "playwright": "^1.49.1"
+  },
+  "private": true
+}
