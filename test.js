@@ -67,7 +67,7 @@ function inject(data) {
     }
   }
   catch (e) {
-    console.log(e);
+    console.log(e.message);
   }
   console.log('Done!');
 }
