@@ -1,23 +1,55 @@
 #!/usr/bin/env node
 const fs = require('fs');
+const path = require('path');
 const PW = require('playwright');
 
-var n, s;
 const browsers = ['chromium', 'firefox', 'webkit', 'chrome', 'msedge'];
-var bro = {};
-var xml_file, xml_data;
+var n, s, x;
+var tst = {}, bro = {};
+var xml_file, xpath_file, xslt_file;
 
+const list = JSON.parse(fs.readFileSync(path.join(__dirname, 'tests.json'), 'utf8'));
+const groups = {};
+const tests = {};
+for (x of list.groups) groups[x.name] = {};
+for (x of list.tests) {
+  tests[x.name] = x;
+  groups[x.name.split('/')[0]][x.name] = x;
+}
 for (n = 2; n  < process.argv.length; n++) {
   s = process.argv[n];
   if (browsers.includes(s)) bro[s] = true;
-  else if (s.endsWith('.xml') && !xml_file) xml_file = s;
+  else if (s.endsWith('.xml')) {
+    if (!xml_file) xml_file = s;
+    else quit('Only a single .xml file is allowed');
+  }
+  else if (s.endsWith('.xpath')) {
+    if (!xpath_file) xpath_file = s;
+    else quit('Only a single .xpath file is allowed');
+  }
+  else if (s.endsWith('.xslt') || s.endsWith('.xsl')) {
+    if (!xslt_file) xslt_file = s;
+    else quit('Only a single .xslt file is allowed');
+  }
+  else if (tests[s]) tst[s] = tests[s];
+  else if (groups[s]) for (x of Object.keys(groups[s])) tst[x] = tests[x];
+  else quit('Unknown command line option: ' + s);
 }
-if (xml_file) xml_data = fs.readFileSync(xml_file, 'utf8');
-
 if (!Object.keys(bro).length) for (s of browsers) bro[s] = true;
-for (s of Object.keys(bro)) run(s);
+if (!Object.keys(tst).length) tst = tests;
 
-async function run(br) {
+for (x of Object.keys(tst)) {
+  for (s of Object.keys(bro)) run(x, s);
+}
+
+function quit(s) {
+  console.error(s);
+  process.exit();
+}
+
+async function run(tst, br) {
+console.log(tst, br);
+return;
   var done;
   var finish = new Promise((resolve) => { done = resolve; });
   const browser = await launch(br, true);
