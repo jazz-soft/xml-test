@@ -30,9 +30,8 @@ for (n = 2; n  < process.argv.length; n++) {
 }
 if (!Object.keys(bro).length) for (s of browsers) bro[s] = true;
 if (Object.keys(xml).length) for (n of Object.keys(xml)) {
-  x = { name: 'from file: ' + n, xml: n };
+  x = { name: 'from file ' + n, xml: n };
   tst[x.name] = x;
-console.log('new test: ', x);
 }
 if (!Object.keys(tst).length) tst = tests;
 
