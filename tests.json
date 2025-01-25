@@ -1,0 +1,20 @@
+{
+  "groups": [
+    {
+      "name": "xml",
+      "descr": "Testing DOMParser and XMLSerializer"
+    }
+  ],
+  "tests": [
+    {
+      "name": "xml/unicode-tag-chinese",
+      "descr": "Unicode characters in the tag name (4E00-9FFF)",
+      "xml": "unicode-tag-chinese.xml"
+    },
+    {
+      "name": "xml/unicode-tag-khmer",
+      "descr": "Unicode characters in the tag name (1780-17FF)",
+      "xml": "unicode-tag-khmer.xml"
+    }
+  ]
+}
