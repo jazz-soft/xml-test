@@ -5,7 +5,7 @@ const PW = require('playwright');
 
 const browsers = ['chromium', 'firefox', 'webkit', 'chrome', 'msedge'];
 var n, s, x;
-var tst = {}, bro = {}, xml = {}, xpath = {}, xslt = {};
+var tst = {}, bro = {}, xml = {}, xpath = {}, xslt = {}, result = [];
 
 const list = JSON.parse(fs.readFileSync(path.join(__dirname, 'tests.json'), 'utf8'));
 const groups = {};
@@ -37,7 +37,7 @@ if (!Object.keys(tst).length) tst = tests;
 
 for (n of Object.keys(tst)) {
   x = tst[n];
-  if (x.xml) x.xml = fs.readFileSync(x.xml, 'utf8');
+  if (x.xml) x.xml = fs.readFileSync(x.xml, 'utf8').split(/\r?\n/).join('\n');
   if (x.xpath) x.xpath = fs.readFileSync(x.xpath, 'utf8');
   if (x.xslt) x.xslt = fs.readFileSync(x.xslt, 'utf8');
   for (s of Object.keys(bro)) run(x, s);
@@ -51,17 +51,25 @@ function quit(s) {
 async function run(tst, br) {
   var done;
   var finish = new Promise((resolve) => { done = resolve; });
-  const browser = await launch(br, true);
+  const browser = await launch(br, false);
+  const out = { test: tst.name, browser: br, ver: browser.version()};
   const page = await browser.newPage();
-  const data = {};
   await page.addInitScript({ content: `(${inject.toString()})(${JSON.stringify(tst)})` });
   page.on('console', function(msg) {
+    var x, k;
     if (msg.text() == 'Done!') done();
-    else console.log(br, '>>', msg);
+    else {
+      try { x = JSON.parse(msg.text()); }
+      catch (err) {/**/}
+      if (typeof x == 'object') for (k of Object.keys(x)) out[k] = x[k];
+      else console.log('✋', br, tst.name, '>>', msg.text());
+    }
   });
   await page.goto('about:blank');
   await finish;
   await browser.close();
+  console.log(out.pass ? '✅' : '❌', out.browser, out.test);
+  result.push(out);
 }
 
 async function launch(br, h) {
@@ -90,12 +98,12 @@ function inject(data) {
       var parser = new DOMParser();
       var serializer = new XMLSerializer();
       var xml = parser.parseFromString(data.xml, "text/xml").documentElement;
-      var str = serializer.serializeToString(xml);
-      console.log('xml:', xml, str);
+      var out = serializer.serializeToString(xml);
+      console.log(JSON.stringify({ output: out, pass: out == data.xml }));
     }
   }
-  catch (e) {
-    console.log(e.message);
+  catch (err) {
+    console.log(JSON.stringify({ error: err.message, pass: false }));
   }
   console.log('Done!');
 }

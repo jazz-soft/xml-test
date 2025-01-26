@@ -15,6 +15,26 @@
       "name": "xml/unicode-tag-khmer",
       "descr": "Unicode characters in the tag name (1780-17FF)",
       "xml": "unicode-tag-khmer.xml"
+    },
+    {
+      "name": "xml/unicode-attr-chinese",
+      "descr": "Unicode characters in the attribute name (4E00-9FFF)",
+      "xml": "unicode-attr-chinese.xml"
+    },
+    {
+      "name": "xml/unicode-attr-khmer",
+      "descr": "Unicode characters in the attribute name (1780-17FF)",
+      "xml": "unicode-attr-khmer.xml"
+    },
+    {
+      "name": "xml/unicode-text-chinese",
+      "descr": "Unicode characters in the text node (4E00-9FFF)",
+      "xml": "unicode-text-chinese.xml"
+    },
+    {
+      "name": "xml/unicode-text-khmer",
+      "descr": "Unicode characters in the text node (1780-17FF)",
+      "xml": "unicode-text-khmer.xml"
     }
   ]
 }
