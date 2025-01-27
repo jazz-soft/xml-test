@@ -3,9 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const PW = require('playwright');
 
-const browsers = ['chromium', 'firefox', 'webkit', 'chrome', 'msedge'];
+const browsers = ['chromium', 'firefox', 'webkit', 'chrome', 'edge', 'msedge', 'safari'];
 var n, s, x;
-var tst = {}, bro = {}, xml = {}, xpath = {}, xslt = {}, result = [];
+var tst = {}, bro = {}, xml = {}, xpath = {}, xslt = {}, result = [], wait = [];
 
 const list = JSON.parse(fs.readFileSync(path.join(__dirname, 'tests.json'), 'utf8'));
 const groups = {};
@@ -28,7 +28,7 @@ for (n = 2; n  < process.argv.length; n++) {
   else if (groups[s]) for (x of Object.keys(groups[s])) tst[x] = tests[x];
   else quit('Unknown command line option: ' + s);
 }
-if (!Object.keys(bro).length) for (s of browsers) bro[s] = true;
+if (!Object.keys(bro).length) for (s of ['chromium', 'firefox', 'webkit']) bro[s] = true;
 if (Object.keys(xml).length) for (n of Object.keys(xml)) {
   x = { name: 'from file ' + n, xml: n };
   tst[x.name] = x;
@@ -40,8 +40,13 @@ for (n of Object.keys(tst)) {
   if (x.xml) x.xml = fs.readFileSync(x.xml, 'utf8').split(/\r?\n/).join('\n');
   if (x.xpath) x.xpath = fs.readFileSync(x.xpath, 'utf8');
   if (x.xslt) x.xslt = fs.readFileSync(x.xslt, 'utf8');
-  for (s of Object.keys(bro)) run(x, s);
+  for (s of Object.keys(bro)) wait.push(run(x, s));
 }
+
+Promise.all(wait).then(function() {
+  console.log('Writing test-result.json ...');
+  fs.writeFileSync(path.join(__dirname, 'test-result.json'), JSON.stringify(result, null, 2), 'utf8');
+});
 
 function quit(s) {
   console.error(s);
@@ -62,7 +67,7 @@ async function run(tst, br) {
       try { x = JSON.parse(msg.text()); }
       catch (err) {/**/}
       if (typeof x == 'object') for (k of Object.keys(x)) out[k] = x[k];
-      else console.log('✋', br, tst.name, '>>', msg.text());
+      else console.log('✋', out.browser, out.test, '>>', msg.text());
     }
   });
   await page.goto('about:blank');
@@ -79,11 +84,13 @@ async function launch(br, h) {
       return await PW.chromium.launch(opt);
     case 'firefox':
       return await PW.firefox.launch(opt);
+    case 'safari':
     case 'webkit':
       return await PW.webkit.launch(opt);
     case 'chrome':
       opt.channel = 'chrome';
       return await PW.chromium.launch(opt);
+    case 'edge':
     case 'msedge':
       opt.channel = 'msedge';
       return await PW.chromium.launch(opt);

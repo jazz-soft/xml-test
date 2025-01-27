@@ -35,6 +35,16 @@
       "name": "xml/unicode-text-khmer",
       "descr": "Unicode characters in the text node (1780-17FF)",
       "xml": "unicode-text-khmer.xml"
+    },
+    {
+      "name": "xml/unicode-value-chinese",
+      "descr": "Unicode characters in the attribute value (4E00-9FFF)",
+      "xml": "unicode-value-chinese.xml"
+    },
+    {
+      "name": "xml/unicode-value-khmer",
+      "descr": "Unicode characters in the attribute value (1780-17FF)",
+      "xml": "unicode-value-khmer.xml"
     }
   ]
 }

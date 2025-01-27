@@ -1,0 +1,90 @@
+{
+  "xml/unicode-tag-chinese": {
+    "chromium": {
+      "131.0.6778.33": true
+    },
+    "firefox": {
+      "132.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xml/unicode-tag-khmer": {
+    "chromium": {
+      "131.0.6778.33": true
+    },
+    "firefox": {
+      "132.0": false
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xml/unicode-attr-chinese": {
+    "chromium": {
+      "131.0.6778.33": true
+    },
+    "firefox": {
+      "132.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xml/unicode-attr-khmer": {
+    "chromium": {
+      "131.0.6778.33": true
+    },
+    "firefox": {
+      "132.0": false
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xml/unicode-text-chinese": {
+    "chromium": {
+      "131.0.6778.33": true
+    },
+    "firefox": {
+      "132.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xml/unicode-text-khmer": {
+    "chromium": {
+      "131.0.6778.33": true
+    },
+    "firefox": {
+      "132.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xml/unicode-value-chinese": {
+    "chromium": {
+      "131.0.6778.33": true
+    },
+    "firefox": {
+      "132.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xml/unicode-value-khmer": {
+    "chromium": {
+      "131.0.6778.33": true
+    },
+    "firefox": {
+      "132.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  }
+}
