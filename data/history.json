@@ -1,10 +1,12 @@
 {
   "xml/unicode-tag-chinese": {
     "chromium": {
-      "131.0.6778.33": true
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
     },
     "firefox": {
-      "132.0": true
+      "132.0": true,
+      "134.0": true
     },
     "webkit": {
       "18.2": true
@@ -12,10 +14,12 @@
   },
   "xml/unicode-tag-khmer": {
     "chromium": {
-      "131.0.6778.33": true
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
     },
     "firefox": {
-      "132.0": false
+      "132.0": false,
+      "134.0": false
     },
     "webkit": {
       "18.2": true
@@ -23,10 +27,12 @@
   },
   "xml/unicode-attr-chinese": {
     "chromium": {
-      "131.0.6778.33": true
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
     },
     "firefox": {
-      "132.0": true
+      "132.0": true,
+      "134.0": true
     },
     "webkit": {
       "18.2": true
@@ -34,10 +40,12 @@
   },
   "xml/unicode-attr-khmer": {
     "chromium": {
-      "131.0.6778.33": true
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
     },
     "firefox": {
-      "132.0": false
+      "132.0": false,
+      "134.0": false
     },
     "webkit": {
       "18.2": true
@@ -45,10 +53,12 @@
   },
   "xml/unicode-text-chinese": {
     "chromium": {
-      "131.0.6778.33": true
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
     },
     "firefox": {
-      "132.0": true
+      "132.0": true,
+      "134.0": true
     },
     "webkit": {
       "18.2": true
@@ -56,10 +66,12 @@
   },
   "xml/unicode-text-khmer": {
     "chromium": {
-      "131.0.6778.33": true
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
     },
     "firefox": {
-      "132.0": true
+      "132.0": true,
+      "134.0": true
     },
     "webkit": {
       "18.2": true
@@ -67,10 +79,12 @@
   },
   "xml/unicode-value-chinese": {
     "chromium": {
-      "131.0.6778.33": true
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
     },
     "firefox": {
-      "132.0": true
+      "132.0": true,
+      "134.0": true
     },
     "webkit": {
       "18.2": true
@@ -78,10 +92,38 @@
   },
   "xml/unicode-value-khmer": {
     "chromium": {
-      "131.0.6778.33": true
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
     },
     "firefox": {
-      "132.0": true
+      "132.0": true,
+      "134.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xpath/simple-math-expression": {
+    "chromium": {
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
+    },
+    "firefox": {
+      "132.0": true,
+      "134.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xpath/simple-boolean-expression": {
+    "chromium": {
+      "131.0.6778.33": true,
+      "133.0.6943.16": true
+    },
+    "firefox": {
+      "132.0": true,
+      "134.0": true
     },
     "webkit": {
       "18.2": true

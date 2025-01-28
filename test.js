@@ -39,6 +39,7 @@ for (n of Object.keys(tst)) {
   x = tst[n];
   if (x.xml) x.xml = fs.readFileSync(x.xml, 'utf8').split(/\r?\n/).join('\n');
   if (x.xpath) x.xpath = fs.readFileSync(x.xpath, 'utf8');
+  if (x.xpath_expr) x.xpath = x.xpath_expr;
   if (x.xslt) x.xslt = fs.readFileSync(x.xslt, 'utf8');
   for (s of Object.keys(bro)) wait.push(run(x, s));
 }
@@ -100,13 +101,29 @@ async function launch(br, h) {
 }
 
 function inject(data) {
+  var xml, out;
+  const res_type = [
+    'ANY_TYPE', 'NUMBER_TYPE', 'STRING_TYPE', 'BOOLEAN_TYPE', 'UNORDERED_NODE_ITERATOR_TYPE', 'ORDERED_NODE_ITERATOR_TYPE',
+    'UNORDERED_NODE_SNAPSHOT_TYPE', 'ORDERED_NODE_SNAPSHOT_TYPE', 'ANY_UNORDERED_NODE_TYPE', 'FIRST_ORDERED_NODE_TYPE'
+  ];
+
   try {
     if (data.xml) {
       var parser = new DOMParser();
       var serializer = new XMLSerializer();
-      var xml = parser.parseFromString(data.xml, "text/xml").documentElement;
-      var out = serializer.serializeToString(xml);
+      xml = parser.parseFromString(data.xml, "text/xml").documentElement;
+      out = serializer.serializeToString(xml);
       console.log(JSON.stringify({ output: out, pass: out == data.xml }));
+    }
+    if (data.xpath) {
+      var res = document.evaluate(data.xpath, document);
+      switch (res.resultType) {
+        case 1: out = res.numberValue; break;
+        case 2: out = res.stringValue; break;
+        case 3: out = res.booleanValue; break;
+        default: out = res_type[res.resultType];
+      }
+      console.log(JSON.stringify({ output: out, pass: out == data.expect }));
     }
   }
   catch (err) {
