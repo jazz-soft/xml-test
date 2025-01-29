@@ -2,7 +2,7 @@
   "groups": [
     {
       "name": "xml",
-      "descr": "DOMParser and XMLSerializer"
+      "descr": "DOMParser / XMLSerializer"
     },
     {
       "name": "xpath",
