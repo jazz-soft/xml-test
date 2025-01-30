@@ -33,7 +33,7 @@ s = '';
 for (k of bros) s += `<th>❌ ${k}</th><th>✅ ${k}</th>`;
 table.push(`<tr>${s}</tr>`);
 for (x of list.tests) {
-  table.push(`<tr><th colspan="${bros.length * 2}">${groups[x.name.split('/')[0]]}: ${x.descr}</th></tr>`);
+  table.push(`<tr><td colspan="${bros.length * 2}">${groups[x.name.split('/')[0]]}: ${x.descr}</td></tr>`);
   s = '';
   for (k of bros) {
     w = fail_pass(x.name, k);
@@ -53,7 +53,6 @@ for (s of fs.readFileSync(rdme_file, 'utf8').split(/\r?\n/)) {
 }
 
 fs.writeFileSync(rdme_file, rdme.join('\n'), 'utf8');
-//console.log(rdme.join('\n'));
 
 function record(x) {
   if (!hist[x.test]) hist[x.test] = { chromium: {}, firefox: {}, webkit: {} };

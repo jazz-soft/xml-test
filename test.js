@@ -6,6 +6,7 @@ const PW = require('playwright');
 const browsers = ['chromium', 'firefox', 'webkit', 'chrome', 'edge', 'msedge', 'safari'];
 var n, s, x;
 var tst = {}, bro = {}, xml = {}, xpath = {}, xslt = {}, result = [], wait = [];
+var print = false;
 
 const list = JSON.parse(fs.readFileSync(path.join(__dirname, 'tests.json'), 'utf8'));
 const groups = {};
@@ -26,11 +27,16 @@ for (n = 2; n  < process.argv.length; n++) {
   else if (s.endsWith('.xslt') || s.endsWith('.xsl')) xslt[s] = true;
   else if (tests[s]) tst[s] = tests[s];
   else if (groups[s]) for (x of Object.keys(groups[s])) tst[x] = tests[x];
+  else if (s == '--print') print = true;
   else quit('Unknown command line option: ' + s);
 }
 if (!Object.keys(bro).length) for (s of ['chromium', 'firefox', 'webkit']) bro[s] = true;
 if (Object.keys(xml).length) for (n of Object.keys(xml)) {
-  x = { name: 'from file ' + n, xml: n };
+  x = { name: 'from file ' + n, xml: n, print: true };
+  tst[x.name] = x;
+}
+if (Object.keys(xpath).length) for (n of Object.keys(xpath)) {
+  x = { name: 'from file ' + n, xpath: n, print: true };
   tst[x.name] = x;
 }
 if (!Object.keys(tst).length) tst = tests;
@@ -41,6 +47,7 @@ for (n of Object.keys(tst)) {
   if (x.xpath) x.xpath = fs.readFileSync(x.xpath, 'utf8');
   if (x.xpath_expr) x.xpath = x.xpath_expr;
   if (x.xslt) x.xslt = fs.readFileSync(x.xslt, 'utf8');
+  if (print) x.print = true;
   for (s of Object.keys(bro)) wait.push(run(x, s));
 }
 
@@ -59,6 +66,7 @@ async function run(tst, br) {
   var finish = new Promise((resolve) => { done = resolve; });
   const browser = await launch(br, false);
   const out = { test: tst.name, browser: br, ver: browser.version()};
+  const cons = [];
   const page = await browser.newPage();
   await page.addInitScript({ content: `(${inject.toString()})(${JSON.stringify(tst)})` });
   page.on('console', function(msg) {
@@ -68,14 +76,24 @@ async function run(tst, br) {
       try { x = JSON.parse(msg.text()); }
       catch (err) {/**/}
       if (typeof x == 'object') for (k of Object.keys(x)) out[k] = x[k];
-      else console.log('✋', out.browser, out.test, '>>', msg.text());
+      else cons.push(msg.text());
     }
   });
   await page.goto('about:blank');
   await finish;
   await browser.close();
+  for (var msg of cons) format(out.browser, out.test, 'console:', msg);
+  if (tst.print) format(out.browser, out.test, 'output:', out.output);
   console.log(out.pass ? '✅' : '❌', out.browser, out.test);
   result.push(out);
+}
+
+function format(a, b, c, msg) {
+  if (('' + msg).includes('\n')) {
+    console.log('✋', a, b, '>>>>', c);
+    console.log(msg);
+  }
+  else console.log('✋', a, b, '>>>>', c, msg);
 }
 
 async function launch(br, h) {
