@@ -5,7 +5,7 @@ const PW = require('playwright');
 
 const browsers = ['chromium', 'firefox', 'webkit', 'chrome', 'edge', 'msedge', 'safari'];
 var n, s, x;
-var tst = {}, bro = {}, xml = {}, xpath = {}, xslt = {}, result = [], wait = [];
+var tst = {}, bro = {}, xml = {}, xpath = {}, xpxpr = {}, xslt = {}, result = [], wait = [];
 var print = false;
 
 const list = JSON.parse(fs.readFileSync(path.join(__dirname, 'tests.json'), 'utf8'));
@@ -28,6 +28,7 @@ for (n = 2; n  < process.argv.length; n++) {
   else if (tests[s]) tst[s] = tests[s];
   else if (groups[s]) for (x of Object.keys(groups[s])) tst[x] = tests[x];
   else if (s == '--print') print = true;
+  else if (s == '--xpath') { n++; xpxpr[process.argv[n]] = true; }
   else quit('Unknown command line option: ' + s);
 }
 if (!Object.keys(bro).length) for (s of ['chromium', 'firefox', 'webkit']) bro[s] = true;
@@ -37,6 +38,10 @@ if (Object.keys(xml).length) for (n of Object.keys(xml)) {
 }
 if (Object.keys(xpath).length) for (n of Object.keys(xpath)) {
   x = { name: 'from file ' + n, xpath: n, print: true };
+  tst[x.name] = x;
+}
+if (Object.keys(xpxpr).length) for (n of Object.keys(xpxpr)) {
+  x = { name: 'from expression ' + n, xpath_expr: n, print: true };
   tst[x.name] = x;
 }
 if (!Object.keys(tst).length) tst = tests;
