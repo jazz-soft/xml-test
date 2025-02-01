@@ -88,7 +88,10 @@ async function run(tst, br) {
   await finish;
   await browser.close();
   for (var msg of cons) format(out.browser, out.test, 'console:', msg);
-  if (tst.print) format(out.browser, out.test, 'output:', out.output);
+  if (tst.print) {
+    if (out.error != undefined) format(out.browser, out.test, 'error:', out.error);
+    if (out.output != undefined) format(out.browser, out.test, 'output:', out.output);
+  }
   console.log(out.pass ? '✅' : '❌', out.browser, out.test);
   result.push(out);
 }
@@ -146,7 +149,7 @@ function inject(data) {
         case 3: out = res.booleanValue; break;
         default: out = res_type[res.resultType];
       }
-      console.log(JSON.stringify({ output: out, pass: out == data.expect }));
+      console.log(JSON.stringify({ output: out, pass: out == data.expect || data.expect == undefined }));
     }
   }
   catch (err) {
