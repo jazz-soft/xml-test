@@ -127,28 +127,36 @@ async function launch(br, h) {
 }
 
 function inject(data) {
-  var xml, out;
+  var parser, serializer, xml, out;
   const res_type = [
     'ANY_TYPE', 'NUMBER_TYPE', 'STRING_TYPE', 'BOOLEAN_TYPE', 'UNORDERED_NODE_ITERATOR_TYPE', 'ORDERED_NODE_ITERATOR_TYPE',
     'UNORDERED_NODE_SNAPSHOT_TYPE', 'ORDERED_NODE_SNAPSHOT_TYPE', 'ANY_UNORDERED_NODE_TYPE', 'FIRST_ORDERED_NODE_TYPE'
   ];
-
+  function eval_xpath(xp, doc) {
+    var res = document.evaluate(xp, doc);
+    switch (res.resultType) {
+      case 1: return res.numberValue;
+      case 2: return res.stringValue;
+      case 3: return res.booleanValue;
+      default: return res_type[res.resultType];
+    }
+  }
   try {
     if (data.xml) {
-      var parser = new DOMParser();
-      var serializer = new XMLSerializer();
+      parser = new DOMParser();
       xml = parser.parseFromString(data.xml, "text/xml").documentElement;
-      out = serializer.serializeToString(xml);
-      console.log(JSON.stringify({ output: out, pass: out == data.xml }));
-    }
-    if (data.xpath) {
-      var res = document.evaluate(data.xpath, document);
-      switch (res.resultType) {
-        case 1: out = res.numberValue; break;
-        case 2: out = res.stringValue; break;
-        case 3: out = res.booleanValue; break;
-        default: out = res_type[res.resultType];
+      if (data.xpath){
+        out = eval_xpath(data.xpath, document);
+        console.log(JSON.stringify({ output: out, pass: out == data.expect || data.expect == undefined }));
       }
+      else {
+        serializer = new XMLSerializer();
+        out = serializer.serializeToString(xml);
+        console.log(JSON.stringify({ output: out, pass: out == data.xml }));
+      }
+    }
+    else if (data.xpath) {
+      out = eval_xpath(data.xpath, document);
       console.log(JSON.stringify({ output: out, pass: out == data.expect || data.expect == undefined }));
     }
   }
