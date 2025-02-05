@@ -35,14 +35,24 @@ if (!Object.keys(bro).length) for (s of ['chromium', 'firefox', 'webkit']) bro[s
 if (Object.keys(xml).length) for (n of Object.keys(xml)) {
   x = { name: 'from file ' + n, xml: n, print: true };
   tst[x.name] = x;
+  if (Object.keys(xpath).length) for (n of Object.keys(xpath)) {
+    x.name += ', ' + n;
+    x.xpath = n;
+  }
+  if (Object.keys(xpxpr).length) for (n of Object.keys(xpxpr)) {
+    x.name += ', `' + n + '`';
+    x.xpath_expr = n;
+  }
 }
-if (Object.keys(xpath).length) for (n of Object.keys(xpath)) {
-  x = { name: 'from file ' + n, xpath: n, print: true };
-  tst[x.name] = x;
-}
-if (Object.keys(xpxpr).length) for (n of Object.keys(xpxpr)) {
-  x = { name: 'from expression ' + n, xpath_expr: n, print: true };
-  tst[x.name] = x;
+else {
+  if (Object.keys(xpath).length) for (n of Object.keys(xpath)) {
+    x = { name: 'from file ' + n, xpath: n, print: true };
+    tst[x.name] = x;
+  }
+  if (Object.keys(xpxpr).length) for (n of Object.keys(xpxpr)) {
+    x = { name: 'from expression ' + n, xpath_expr: n, print: true };
+    tst[x.name] = x;
+  }
 }
 if (!Object.keys(tst).length) tst = tests;
 
@@ -138,19 +148,26 @@ function inject(data) {
       case 1: return res.numberValue;
       case 2: return res.stringValue;
       case 3: return res.booleanValue;
+      case 4: case 5:
+        var nodes = [];
+        while ((node = res.iterateNext())) nodes.push(serializer.serializeToString(node));
+        return nodes;
       default: return res_type[res.resultType];
     }
   }
   try {
+    // about:blank has <html> in firefox and is empty in other browsers
+    while (document.firstChild) document.removeChild(document.firstChild);
+    parser = new DOMParser();
+    serializer = new XMLSerializer();
     if (data.xml) {
-      parser = new DOMParser();
       xml = parser.parseFromString(data.xml, "text/xml").documentElement;
+      document.appendChild(xml);
       if (data.xpath){
         out = eval_xpath(data.xpath, document);
         console.log(JSON.stringify({ output: out, pass: out == data.expect || data.expect == undefined }));
       }
       else {
-        serializer = new XMLSerializer();
         out = serializer.serializeToString(xml);
         console.log(JSON.stringify({ output: out, pass: out == data.xml }));
       }
