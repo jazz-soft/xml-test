@@ -128,5 +128,60 @@
     "webkit": {
       "18.2": true
     }
+  },
+  "xpath/local-name": {
+    "chromium": {
+      "133.0.6943.16": false
+    },
+    "firefox": {
+      "134.0": true
+    },
+    "webkit": {
+      "18.2": false
+    }
+  },
+  "xpath/local-name-abs": {
+    "chromium": {
+      "133.0.6943.16": false
+    },
+    "firefox": {
+      "134.0": true
+    },
+    "webkit": {
+      "18.2": false
+    }
+  },
+  "xpath/local-name-wildcard": {
+    "chromium": {
+      "133.0.6943.16": true
+    },
+    "firefox": {
+      "134.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xpath/local-name-wildcard-abs": {
+    "chromium": {
+      "133.0.6943.16": true
+    },
+    "firefox": {
+      "134.0": true
+    },
+    "webkit": {
+      "18.2": true
+    }
+  },
+  "xpath/local-name-wildcard-namespace": {
+    "chromium": {
+      "133.0.6943.16": false
+    },
+    "firefox": {
+      "134.0": false
+    },
+    "webkit": {
+      "18.2": false
+    }
   }
 }

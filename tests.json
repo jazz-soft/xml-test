@@ -62,6 +62,41 @@
       "descr": "Simple boolean expression",
       "xpath_expr": "0 = 0",
       "expect": true
+    },
+    {
+      "name": "xpath/local-name",
+      "descr": "local-name(dummy)",
+      "xml_data": "<dummy/>",
+      "xpath_expr": "local-name(dummy)",
+      "expect": "dummy"
+    },
+    {
+      "name": "xpath/local-name-abs",
+      "descr": "local-name(/dummy)",
+      "xml_data": "<dummy/>",
+      "xpath_expr": "local-name(/dummy)",
+      "expect": "dummy"
+    },
+    {
+      "name": "xpath/local-name-wildcard",
+      "descr": "local-name(*)",
+      "xml_data": "<dummy/>",
+      "xpath_expr": "local-name(*)",
+      "expect": "dummy"
+    },
+    {
+      "name": "xpath/local-name-wildcard-abs",
+      "descr": "local-name(/*)",
+      "xml_data": "<dummy/>",
+      "xpath_expr": "local-name(/*)",
+      "expect": "dummy"
+    },
+    {
+      "name": "xpath/local-name-wildcard-namespace",
+      "descr": "local-name(/*:dummy)",
+      "xml_data": "<dummy/>",
+      "xpath_expr": "local-name(/*:dummy)",
+      "expect": "dummy"
     }
   ]
 }

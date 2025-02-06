@@ -59,6 +59,7 @@ if (!Object.keys(tst).length) tst = tests;
 for (n of Object.keys(tst)) {
   x = tst[n];
   if (x.xml) x.xml = fs.readFileSync(x.xml, 'utf8').split(/\r?\n/).join('\n');
+  if (x.xml_data) x.xml = x.xml_data;
   if (x.xpath) x.xpath = fs.readFileSync(x.xpath, 'utf8');
   if (x.xpath_expr) x.xpath = x.xpath_expr;
   if (x.xslt) x.xslt = fs.readFileSync(x.xslt, 'utf8');
