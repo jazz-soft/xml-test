@@ -2,13 +2,16 @@
 const fs = require('fs');
 const path = require('path');
 
+const link = 'https://github.com/jazz-soft/xml-test/blob/main/tests.json#L';
 const list_file = path.join(__dirname, 'tests.json');
 const hist_file = path.join(__dirname, 'data', 'history.json');
 const data_file = path.join(__dirname, 'test-result.json');
 const rdme_file = path.join(__dirname, 'README.md');
-const list = JSON.parse(fs.readFileSync(list_file, 'utf8'));
+const list_text = fs.readFileSync(list_file, 'utf8');
+const list = JSON.parse(list_text);
 const hist = fs.existsSync(hist_file) ? JSON.parse(fs.readFileSync(hist_file, 'utf8')) : {};
 const data = JSON.parse(fs.readFileSync(data_file, 'utf8'));
+const text = list_text.split(/\r?\n/);
 const report = { chromium: true, firefox: true, webkit: true };
 const new_hist = {};
 const order = [];
@@ -22,6 +25,10 @@ for (x of list.tests) {
   order.push(x.name);
   index[x.name] = x;
 }
+for (k = 0; k < text.length; k++) {
+  w = text[k].match(/"name":\s*"([^"]*)"/);
+  if (w && index[w[1]]) index[w[1]].line = k + 1;
+}
 
 for (x of data) if (index[x.test] && report[x.browser]) record(x);
 for (k of order) new_hist[k] = hist[k];
@@ -33,7 +40,7 @@ s = '';
 for (k of bros) s += `<th>❌ ${k}</th><th>✅ ${k}</th>`;
 table.push(`<tr>${s}</tr>`);
 for (x of list.tests) {
-  table.push(`<tr><td colspan="${bros.length * 2}">${groups[x.name.split('/')[0]]}: ${x.descr}</td></tr>`);
+  table.push(`<tr><td colspan="${bros.length * 2}"><a href="${link}${x.line}">${groups[x.name.split('/')[0]]}: ${x.descr}</a></td></tr>`);
   s = '';
   for (k of bros) {
     w = fail_pass(x.name, k);
