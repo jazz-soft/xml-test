@@ -21,6 +21,8 @@ Testing browser-native XML functions (using Playwright)
 
 `node test --xpath "/*"` - input XPath expression(s) directly in the command line
 
+`node test data1.xml data2.xml transform.xsl` - Transform XML file(s) with XSLT stylesheet(s)
+
 etc...
 
 ## Results:

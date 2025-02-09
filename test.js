@@ -33,24 +33,36 @@ for (n = 2; n  < process.argv.length; n++) {
 }
 if (!Object.keys(bro).length) for (s of ['chromium', 'firefox', 'webkit']) bro[s] = true;
 if (Object.keys(xml).length) for (n of Object.keys(xml)) {
-  x = { name: 'from file ' + n, xml: n, print: true };
-  tst[x.name] = x;
-  if (Object.keys(xpath).length) for (n of Object.keys(xpath)) {
-    x.name += ', ' + n;
-    x.xpath = n;
+  if (Object.keys(xpath).length || Object.keys(xpxpr).length || Object.keys(xslt).length) {
+    for (s of Object.keys(xpath)) {
+      x = { name: 'from file ' + n + ', ' + s, xml: n, xpath: s, print: true };
+      tst[x.name] = x;
+    }
+    for (s of Object.keys(xpxpr)) {
+      x = { name: 'from file ' + n + ', `' + s + '`', xml: n, xpath_expr: s, print: true };
+      tst[x.name] = x;
+    }
+    for (s of Object.keys(xslt)) {
+      x = { name: 'from file ' + n + ', ' + s, xml: n, xslt: s, print: true };
+      tst[x.name] = x;
+    }
   }
-  if (Object.keys(xpxpr).length) for (n of Object.keys(xpxpr)) {
-    x.name += ', `' + n + '`';
-    x.xpath_expr = n;
+  else {
+    x = { name: 'from file ' + n, xml: n, print: true };
+    tst[x.name] = x;
   }
 }
 else {
-  if (Object.keys(xpath).length) for (n of Object.keys(xpath)) {
+  for (n of Object.keys(xpath)) {
     x = { name: 'from file ' + n, xpath: n, print: true };
     tst[x.name] = x;
   }
-  if (Object.keys(xpxpr).length) for (n of Object.keys(xpxpr)) {
+  for (n of Object.keys(xpxpr)) {
     x = { name: 'from expression ' + n, xpath_expr: n, print: true };
+    tst[x.name] = x;
+  }
+  for (n of Object.keys(xslt)) {
+    x = { name: 'from file ' + n, xml: n, print: true };
     tst[x.name] = x;
   }
 }
@@ -138,7 +150,7 @@ async function launch(br, h) {
 }
 
 function inject(data) {
-  var parser, serializer, xml, out;
+  var parser, serializer, xslt, xml, out;
   const res_type = [
     'ANY_TYPE', 'NUMBER_TYPE', 'STRING_TYPE', 'BOOLEAN_TYPE', 'UNORDERED_NODE_ITERATOR_TYPE', 'ORDERED_NODE_ITERATOR_TYPE',
     'UNORDERED_NODE_SNAPSHOT_TYPE', 'ORDERED_NODE_SNAPSHOT_TYPE', 'ANY_UNORDERED_NODE_TYPE', 'FIRST_ORDERED_NODE_TYPE'
@@ -166,6 +178,12 @@ function inject(data) {
       document.appendChild(xml);
       if (data.xpath){
         out = eval_xpath(data.xpath, document);
+        console.log(JSON.stringify({ output: out, pass: out == data.expect || data.expect == undefined }));
+      }
+      if (data.xslt){
+        xslt = new XSLTProcessor();
+        xslt.importStylesheet(parser.parseFromString(data.xslt, "application/xml"));
+        out = serializer.serializeToString(xslt.transformToFragment(xml, document));
         console.log(JSON.stringify({ output: out, pass: out == data.expect || data.expect == undefined }));
       }
       else {
